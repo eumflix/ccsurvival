@@ -1,7 +1,7 @@
 <title>클래식 작곡가 서바이벌</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Great+Vibes&display=swap">
 <style>
 /* 레이아웃: 필사본 한 장처럼 이중 괘선 틀 안에 오선지 전장이 놓이고, 위쪽에 현재 음악가와 계보, 대표곡 수집 표시가 있다. */
 :root{
@@ -37,7 +37,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 #clr{position:absolute;top:8px;left:50%;transform:translateX(-50%);padding:2px 12px;background:#000a;border:1px solid var(--gold);font-size:13px;color:var(--gold);pointer-events:none;white-space:nowrap}
 #wl{position:absolute;left:6px;bottom:6px;display:flex;flex-direction:column-reverse;gap:3px;pointer-events:none;max-width:60%}
 .chip{align-self:flex-start;padding:0 6px;font-size:11px;line-height:17px;background:#000a;border-left:3px solid var(--gold);color:var(--vellum);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-.btn.dif.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.btn.dif.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}.btn.dif.imp.on{background:#d62b2b;color:#fff;border-color:#d62b2b}.btn.dif.imp{color:#ff8a8a;border-color:#8a2a2a}.btn.dif.imp.on{color:#fff;border-color:#d62b2b}
 .ttl{display:flex;align-items:center;justify-content:space-between;gap:10px}.ttl h1{margin:0;min-width:0;word-break:keep-all}.tlg{flex:none;width:70px;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.9)) drop-shadow(0 0 7px rgba(230,20,30,.45))}
 @media (max-width:520px){.tlg{width:46px}}
 .panel:has(.ttl){position:relative}.ttl{padding-right:82px}.ttl .tlg{position:absolute;top:3px;right:8px;width:70px}
@@ -134,7 +134,7 @@ const ERA=[
 ];
 /* 진화에 필요한 대표곡 수. 진화 경로가 없는 최종 유닛은 0 */
 const NEED=[1,1,3,4,0];
-const needOf=id=>EVO[id]?NEED[C[id].era]:0;
+const needOf=id=>EVO[id]?(G&&G.diff===3?1:NEED[C[id].era]):0;
 
 /* 대표곡 묶음: [제목, 정답 해설] */
 const POOL={
@@ -269,7 +269,7 @@ const C={
  palestrina:{n:'팔레스트리나',era:1,yr:'약 1525~1594',em:'팔',col:'#a9c7ff',pool:'palestrina',
   tr:'4성부가 균형 있게 어우러지는 순수한 다성음악(폴리포니).',
   ab:'몸을 중심으로 십자(十) 모양의 곡선 날개 네 개가 바깥으로 뻗어 천천히 돌며, 닿는 적마다 피해를 준다.',
-  w:{t:'fan',cd:99,dmg:10}},
+  w:{t:'fan',cd:99,dmg:12}},
  monteverdi:{n:'몬테베르디',era:1,yr:'1567~1643',em:'몬',col:'#7fd0c0',pool:'monteverdi',
   tr:'가사의 감정을 따라가는 선율. 오페라가 태어나던 시기의 인물이다.',
   ab:'적을 끝까지 따라가는 유도 음표 셋을 쏜다.',
@@ -294,7 +294,7 @@ const C={
  haydn:{n:'하이든',era:3,yr:'1732~1809',em:'하',col:'#bfe3d0',pool:'haydn',
   tr:'교향곡과 현악 사중주의 틀을 다진 인물. 유머가 넘친다. 〈놀람〉 교향곡.',
   ab:'4악장 교향곡의 틀처럼, 색과 속도가 다른 음표 네 개가 평소엔 몸을 중심으로 +자와 x자로 교차하며 오가고, 범위 안에 적이 들어오면 유도되어 날아가 강하게 친 뒤 돌아온다. 빨간 음표가 가장 빠르다.',
-  w:{t:'orbit',cd:99,dmg:12,orb:4,fix:true}},
+  w:{t:'orbit',cd:99,dmg:10,orb:4,fix:true}},
  mozart:{n:'모차르트',era:3,yr:'1756~1791',em:'모',col:'#d6e6f5',pool:'mozart',
   tr:'우아하고 가벼운 고전 양식. 빠르고 맑은 악구.',
   ab:'가볍고 빠른 음표를 쉬지 않고 연달아 쏜다.',
@@ -310,19 +310,19 @@ const C={
  tchaikovsky:{n:'차이콥스키',era:4,yr:'1840~1893',em:'차',col:'#9ee0ff',pool:'tchaikovsky',
   tr:'발레 음악과 서정적인 선율.',
   ab:'발레의 회전처럼 소용돌이 모양으로 연속 발사한다.',
-  w:{t:'spiral',cd:.1,dmg:6}},
+  w:{t:'spiral',cd:.1,dmg:8}},
  chopin:{n:'쇼팽',era:4,yr:'1810~1849',em:'쇼',col:'#e9b3d6',pool:'chopin',
   tr:'피아노의 시인. 템포를 자유롭게 늘이고 줄이는 루바토.',
   ab:'나갔다가 되돌아오는 음표가 처음엔 둘, 10초마다 하나씩 늘어 최대 여섯. 루바토처럼 공격 간격이 0.1~1초 사이에서 제멋대로 바뀐다.',
   w:{t:'boom',cd:1,cdr:[.1,1],dmg:17,R:220}},
  verdi:{n:'베르디',era:4,yr:'1813~1901',em:'디',col:'#ff9a8a',pool:'verdi',
   tr:'이탈리아 오페라의 거장. 합창과 극적인 힘. 〈아이다〉의 개선 행진곡.',
-  ab:'적이 모인 곳 두 군데에 폭발을 일으켜 큰 피해를 주고, 불길이 1초 동안 남아 위에 선 적에게 지속 피해를 준다.',
-  w:{t:'zone',cd:3,dmg:3,d0:20,R:100,n:2}},
+  ab:'적이 모인 곳 세 군데에 폭발을 일으켜 큰 피해를 주고, 불길이 1초 동안 남아 위에 선 적에게 지속 피해를 준다.',
+  w:{t:'zone',cd:3,dmg:3,d0:30,R:100,n:3}},
  liszt:{n:'리스트',era:4,yr:'1811~1886',em:'리',col:'#ffd37a',pool:'liszt',
   tr:'초절기교의 피아니스트. 교향시라는 새 장르를 만들었다.',
-  ab:'여덟 가닥의 촉수가 주위에서 일렁이다가, 가까운 적을 향해 뻗어 나가 찌른다.',
-  w:{t:'tent',cd:1.2,dmg:8}},
+  ab:'열 가닥의 촉수가 주위에서 일렁이다가, 가까운 적을 향해 뻗어 나가 찌른다.',
+  w:{t:'tent',cd:1.2,dmg:10}},
  mahler:{n:'말러',era:4,yr:'1860~1911',em:'말',col:'#e0a0a0',pool:'mahler',
   tr:'거대한 편성의 교향곡. 삶과 죽음을 오가는 음악.',
   ab:'악기를 소환해 함께 싸운다. 작은 악기를 1초마다 3개, 큰 악기를 2초마다 1개 불러내고, 적과 서로 싸운다.',
@@ -330,11 +330,11 @@ const C={
  wagner:{n:'바그너',era:4,yr:'1813~1883',em:'바',col:'#a8c8ff',pool:'wagner',
   tr:'음악과 연극을 하나로 묶은 악극. 거대한 규모.',
   ab:'발퀴레의 기행처럼 여섯 줄이 나란히 돌진해 관통한다.',
-  w:{t:'row',cd:.4,dmg:7}},
+  w:{t:'row',cd:.4,dmg:9}},
  brahms:{n:'브람스',era:4,yr:'1833~1897',em:'브',col:'#b48ae6',pool:'brahms',
   tr:'고전의 형식미에 낭만의 깊은 화성을 더한 묵직한 음향.',
-  ab:'크고 묵직한 화음의 물결이 몸 주위로 퍼져 닿는 모두를 친다. 받는 피해도 20% 줄어든다.',
-  w:{t:'ring',cd:2,dmg:40,R:200,dr:true,disc:true}}
+  ab:'크고 묵직한 화음의 물결이 몸 주위로 퍼져 닿는 모두를 친다.',
+  w:{t:'ring',cd:2,dmg:45,R:200,disc:true}}
 };
 
 /* 진화 트리. 갈래가 둘보다 많으면 진화 때 무작위 2개만 보여 준다 */
@@ -351,6 +351,10 @@ const EVO={
  mozart:['chopin','tchaikovsky','wagner','verdi'],
  beethoven:['schubert','liszt','mahler','verdi']
 };
+/* 불가능 모드: 모든 작곡가가 생년월일 순(같은 해는 월일 순) 한 줄로 이어진다 */
+const EVO0=JSON.parse(JSON.stringify(EVO));
+const IMPORD=['gregorio','guido','josquin','palestrina','monteverdi','vivaldi','handel','bach','haydn','mozart','beethoven','schubert','chopin','liszt','wagner','verdi','brahms','tchaikovsky','mahler'];
+function setEvo(imp){for(const k of Object.keys(EVO))delete EVO[k];if(imp)IMPORD.forEach((id,i)=>{if(i<IMPORD.length-1)EVO[id]=[IMPORD[i+1]];});else Object.assign(EVO,EVO0);}
 
 /* 공격 이름 (화면의 보유 공격 목록용) */
 const WN={gregorio:'단선율 빔',guido:'귀도의 손',josquin:'겹파도',palestrina:'4성부 날개',monteverdi:'유도 음표',monteverdi2:'바로크 유도 음표',
@@ -382,7 +386,7 @@ const TXT={
  handel:{an:'수상 음악',ad:'강물 위로 퍼지는 물결처럼 웅장한 선율이 번져 나간다.',
   tr:'오페라와 오라토리오 같은 대규모 성악 작품이 인기를 끌었다. 화려한 장식과 대비가 특징이다.',
   bio:'독일에서 태어나 이탈리아를 거쳐 영국에서 활약한 작곡가. 영국에 귀화해 오페라와 오라토리오를 썼다. 〈메시아〉의 〈할렐루야〉 합창과 〈수상 음악〉이 유명하다.'},
- bach:{an:'푸가의 그림자',ad:'앞선 선율을 뒤따라 모방하며, 서로 다른 선율이 엇갈려 어우러진다.',fx:'이동속도 5% 감소',
+ bach:{an:'푸가의 그림자',ad:'앞선 선율을 뒤따라 모방하며, 서로 다른 선율이 엇갈려 어우러진다.',
   tr:'대위법이 정점에 올랐다. 서로 다른 선율이 동시에 엇갈리며 어우러지는 푸가가 대표적이다.',
   bio:'18세기 독일의 작곡가이자 오르가니스트. 라이프치히 성 토마스 교회의 칸토르로 일했다. 대위법과 푸가를 완성한 바로크 후기의 대가로, 사후 한동안 잊혔다가 19세기에 다시 평가받았다.'},
  haydn:{an:'4악장 교향곡',ad:'네 개의 악장처럼 서로 다른 네 음표가 엇갈려 움직인다.',
@@ -403,7 +407,7 @@ const TXT={
  chopin:{an:'루바토',ad:'템포를 자유롭게 늘이고 줄이는 피아노의 시인.',fx:'돌아오는 음표가 점점 늘어남(최대 6)',
   tr:'피아노가 널리 퍼지며 개성 있는 피아노 소품이 사랑받았다. 템포를 자유롭게 다루는 루바토가 쓰였다.',
   bio:'폴란드 태생으로 20세 무렵 파리에 정착한 작곡가이자 피아니스트. 녹턴, 왈츠, 마주르카, 폴로네즈 등 거의 피아노 곡만 썼다. ‘피아노의 시인’이라 불린다.'},
- verdi:{an:'웅장한 합창',ad:'극적인 합창처럼 웅장한 소리가 폭발하고 불길로 남는다.',fx:'폭발 20 + 1초간 0.1초마다 3',
+ verdi:{an:'웅장한 합창',ad:'극적인 합창처럼 웅장한 소리가 폭발하고 불길로 남는다.',fx:'폭발 30 + 1초간 0.1초마다 3',
   tr:'이탈리아에서는 오페라가 가장 큰 대중 예술이었다. 사람의 목소리와 극적인 합창이 중심이었다.',
   bio:'19세기 이탈리아 오페라 작곡가. 〈나부코〉의 합창은 통일을 바라던 이탈리아 사람들에게 사랑받았다. 〈리골레토〉, 〈라 트라비아타〉, 〈아이다〉를 남겼다.'},
  liszt:{an:'초절기교',ad:'손이 보이지 않을 만큼 빠르고 화려한 연주.',
@@ -415,7 +419,7 @@ const TXT={
  wagner:{an:'악극의 물결',ad:'음악과 극이 하나로 몰아치는 거대한 흐름.',
   tr:'음악·시·연극을 합친 악극이 등장했고, 인물이나 사물을 상징하는 선율 ‘라이트모티프’가 쓰였다.',
   bio:'19세기 독일 작곡가. 대본도 직접 쓰고, 바이로이트에 자신의 작품을 위한 극장을 세웠다. 〈니벨룽의 반지〉, 〈탄호이저〉, 〈로엔그린〉을 남겼다.'},
- brahms:{an:'묵직한 화음',ad:'두껍고 단단한 화음이 발밑에서 번졌다가 사라진다.',fx:'받는 피해 20% 감소',
+ brahms:{an:'묵직한 화음',ad:'두껍고 단단한 화음이 발밑에서 번졌다가 사라진다.',
   tr:'감정을 중시하면서도, 고전의 형식미를 지키려는 흐름이 함께 있었다.',
   bio:'19세기 독일 작곡가. 함부르크에서 태어나 빈에서 활동했다. 교향곡 4곡, 〈독일 레퀴엠〉, 〈헝가리 무곡〉을 남겼다. 슈만 부부와 가까웠고 베토벤의 전통을 잇는다고 평가받았다.'}
 };
@@ -445,7 +449,8 @@ const ETYPE=[
 const DIFFS=[
   {n:'쉬움',sp:1,hp:1,dm:1,cap:230,d:'기본 난이도예요.'},
   {n:'보통',sp:2,hp:1.3,dm:1.2,cap:420,d:'적이 약 2배로 몰려와요.'},
-  {n:'어려움',sp:3,hp:1.6,dm:1.5,cap:560,d:'적이 약 3배, 더 단단하고 아파요.'}
+  {n:'어려움',sp:3,hp:1.6,dm:1.5,cap:560,d:'적이 약 3배, 더 단단하고 아파요.'},
+  {n:'불가능',sp:3.5,xs:2.5,hp:2,dm:1.8,cap:640,d:'진화 길이 하나뿐! 모든 작곡가를 순서대로 거쳐야 하고, 보스가 쉴 새 없이 몰려와요.'}
 ];
 let DI=0;
 const dif=()=>DIFFS[G?G.diff:DI];
@@ -464,7 +469,8 @@ let G=null,curW=null;
 const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
 const bgCur={bg:hex(ERA[0].bg),ln:hex(ERA[0].ln)};
 const XPK=4;
-const xpNeed=l=>(8+3*l)*dif().sp*Math.min(XPK,1.5+.5*l);
+const impK=()=>G.diff===3?G.lineage.length-1:0;
+const xpNeed=l=>(8+3*l)*(dif().xs||dif().sp)*(G.diff===3?1.5**Math.min(7,impK()):1)*Math.min(XPK,1.5+.5*l);
 const pm=()=>(1+.1*G.power)*(1+.05*(G.atkB||0))*(G.hown?[.2,.4,.6,.8,1][C[G.cid].era]:1);/* 보조 작곡가는 플레이어가 도달한 시대에 따라 강해진다 */
 const dfm=()=>1/(1+.05*(G.defB||0));
 const cdm=()=>Math.max(.25,Math.max(.45,Math.pow(.96,G.power))/(1+.05*(G.asB||0)));
@@ -596,7 +602,7 @@ function bossPos(i){
   const bs=G.boss.bs[i];
   return {x:bs.x,y:bs.y+Math.sin(bs.t*1.7+i*2)*4,al:Math.min(1,bs.t/1.2)};
 }
-function ebShot(x,y,a,sp,col,r,o){if(G.eb.length<800)G.eb.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,r:r||6,col,t:0,o});}
+function ebShot(x,y,a,sp,col,r,o){if(G.diff===3&&typeof o==='number'&&G.t>=480)sp*=Math.min(3,1.2+.1*Math.floor((G.t-480)/20));if(G.eb.length<800)G.eb.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,r:r||6,col,t:0,o});}
 function bossDown(i){
   const bs=G.boss&&G.boss.bs[i];if(!bs||!bs.alive)return;
   bs.alive=false;const ps=bossPos(i);
@@ -607,7 +613,7 @@ function bossDown(i){
 }
 function ensureBoss(){if(!G.boss){G.boss={bs:[0,1,2].map(()=>({sp:false,alive:false,t:0,c:0,n:0,e:null})),pan:false};G.eb=[];}return G.boss;}
 function placeBoss(bs,i,kind,ang){
-  const D=dif(),hp=2000*(D.hp||1);
+  const D=dif(),hp=2000*(D.hp||1)*(1+.08*impK());
   bs.kind=kind;bs.sp=true;bs.alive=true;
   bs.x=G.x+Math.cos(ang)*bossRadius()*1.8;bs.y=G.y+Math.sin(ang)*bossRadius()*1.8;
   bs.e={x:bs.x,y:bs.y,type:3,v:0,hp,mhp:hp,r:46,sp:0,dmg:0,xp:0,orb:0,flash:0,ph:0,dead:false,boss:i,ac:0,sh:0,fn:0};
@@ -620,7 +626,7 @@ function panicBoss(kind,ang,fixedSlot){
   placeBoss(b.bs[i],i,kind,ang);
 }
 function panicUpdate(dt){
-  if(G.demo||G.romT!=null||C[G.cid].era>=4)return;
+  if(G.demo||G.diff===3||G.romT!=null||C[G.cid].era>=4)return;
   const t=G.t;if(t<270)return;
   G.pan=true;
   if(G.pmT==null)G.pmT=270;
@@ -628,6 +634,44 @@ function panicUpdate(dt){
   if(t>=420&&!G.pS3){G.pS3=true;G.pmT=Math.min(G.pmT,t);G.pfT=t+30;for(let k=0;k<3;k++)panicBoss(k,BOSSES[k].ang,k);G.msg={s:'어둠의 음악단 최고 간부 셋이 나타났어요!',t:3.6};sfx('evo');}
   if(t>=G.pmT){const iv=t>=420?10:30,j=(G.pmN=(G.pmN||0)+1)%4;spawnMid(j);G.pmT+=iv;}
   if(G.pS3&&t>=G.pfT){G.pfT+=30;panicBoss(Math.random()*3|0,rnd(0,6.283));G.msg={s:'어둠의 음악단 최고 간부가 또 나타났어요!',t:3.2};sfx('evo');}
+}
+/* --- 불가능 모드 일정 --- */
+const IMP_TENT_T=420;
+function impElites(){return G.enemies.filter(e=>e.type===3&&!e.dead&&e.mid==null&&e.boss==null);}
+function impUpdate(dt){
+  if(G.diff!==3||G.demo)return;
+  G.pan=true;const t=G.t,D=dif();
+  /* 정예: 1분부터. 처음엔 동시에 적게, 시간이 지날수록 늘어난다 */
+  if(t>=60){
+    G.ieT=(G.ieT==null?0:G.ieT)-dt;
+    if(G.ieT<=0){G.ieT=9;const cap=t<180?2:t<300?4:t<420?6:8;let al=impElites().length;const k=1+((t-60)/90|0);for(let i=0;i<k&&al<cap;i++,al++)spawn(3);}
+  }
+  if(G.imT==null)G.imT=60;
+  if(t>=G.imT){G.imT+=15;spawnMid((G.imN=(G.imN||0)+1)%4);}
+  if(G.ibT==null)G.ibT=120;
+  if(t>=G.ibT){G.ibT+=30;panicBoss(Math.random()*3|0,rnd(0,6.283));G.msg={s:'어둠의 음악단 최고 간부가 나타났어요!',t:3.2};sfx('evo');}
+  if(G.i4T==null)G.i4T=240;
+  if(t>=G.i4T){G.i4T+=180;for(let j=0;j<4;j++)spawnMid(j,j*1.5708);G.msg={s:'간부 네 명이 사방에서 나타났어요!',t:3.4};}
+  if(t>=300&&!G.i3){G.i3=true;for(let k=0;k<3;k++)panicBoss(k,BOSSES[k].ang);G.msg={s:'최고 간부 셋이 세 방향에서 나타났어요!',t:3.6};sfx('evo');}
+  for(const e of G.enemies){
+    if(e.dead)continue;
+    if(e.mid!=null||e.boss!=null)e.hp=Math.min(e.mhp,e.hp+5*dt);
+    if(t>=IMP_TENT_T&&e.type===3&&e.mid==null&&e.boss==null){
+      e.tc=(e.tc==null?rnd(.2,.8):e.tc)-dt;
+      const dx=G.x-e.x,dy=G.y-e.y,d=Math.hypot(dx,dy);
+      if(d<130&&e.tc<=0&&G.inv<=0){e.tc=.6;G.hp-=6*D.dm*dfm();G.inv=.45;G.hit=.18;sfx('hurt');}
+    }
+  }
+}
+function drawEliteTent(camX,camY){
+  if(G.diff!==3||G.t<IMP_TENT_T||G.demo)return;
+  for(const e of G.enemies){
+    if(e.type!==3||e.dead||e.mid!=null||e.boss!=null)continue;
+    const dx=G.x-e.x,dy=G.y-e.y;if(dx*dx+dy*dy>520*520)continue;
+    const ex=e.x-camX,ey=e.y-camY,b=Math.atan2(dy,dx),L=96+12*Math.sin(G.t*2.2+e.ph),pts=[];
+    for(let k=0;k<=10;k++){const f=k/10,r=16+L*f,off=Math.sin(G.t*4+k*.8+e.ph)*11*f,a=b+off/Math.max(16,r);pts.push([ex+Math.cos(a)*r,ey+Math.sin(a)*r]);}
+    wavyLine(pts,16,5,'#2e1a08',.9);wavyLine(pts,11,3,'#9a6230',1);wavyLine(pts,4,1.5,'#d9a066',.9);
+  }
 }
 function bossUpdate(dt){
   if(!inBoss()&&!(G.boss&&G.boss.pan)){if(G.boss){G.boss=null;G.eb=[];G.enemies=G.enemies.filter(e=>e.boss==null);}return;}
@@ -663,7 +707,7 @@ function bossUpdate(dt){
 /* --- 중간보스: 어려움 · 낭만 시대 진입 후 4·24·44·64초에 한 마리씩 (체력 1000, 3초마다 부채꼴 4발) --- */
 const MBS=[[0],[0,1],[0,1,2,3]],FB=[[1],[1,2],[0,1,2]],MB_COL=['#ff6b8a','#c8d0ff','#ffb347','#ff4d6d'],MB_NM=['반가면','전면가면','가면 부채','가면 카드'];
 function spawnMid(j,fa){
-  const D=dif(),ang=fa!=null?fa:j*1.5708+rnd(-.4,.4),d=Math.hypot(W,H)/2+60,T=ETYPE[4],hp=T.hp*(D.hp||1);
+  const D=dif(),ang=fa!=null?fa:j*1.5708+rnd(-.4,.4),d=Math.hypot(W,H)/2+60,T=ETYPE[4],hp=T.hp*(D.hp||1)*(1+.08*impK());
   G.enemies.push({x:G.x+Math.cos(ang)*d,y:G.y+Math.sin(ang)*d,type:4,v:j,mid:j,hp,mhp:hp,r:T.r,sp:T.sp,dmg:T.dmg*D.dm,xp:0,orb:0,flash:0,ph:rnd(0,6.283),dead:false,ac:0,sh:0,fn:0,bt:0,bc:0,bn:0});
   G.msg={s:'중간보스 등장! '+MB_NM[j]+' (체력 '+Math.round(hp)+')',t:3.2};sfx('evo');
 }
@@ -685,7 +729,7 @@ function midUpdate(dt){
   }
 }
 function ebUpdate(dt){
-  const dmg=8*(dif().dm||1)*dfm();
+  const dmg=8*(dif().dm||1)*(1+.04*impK())*dfm();
   for(const b of G.eb){
     b.t+=dt;b.x+=b.vx*dt;b.y+=b.vy*dt;
     const dx=b.x-G.x,dy=b.y-G.y;
@@ -737,7 +781,7 @@ function openChest(){
     for(const e of G.enemies)if(!e.dead){const dx=e.x-G.x,dy=e.y-G.y,rr=R+e.r;if(dx*dx+dy*dy<rr*rr)hurt(e,150*pm());}
     toast('상자: 폭탄! 주변에 큰 피해');sfx('fire',G.cid);
   }else if(r<.95){
-    if(noQuiz()||timedQuiz())heal('상자: 경험치 대신 HP +40');
+    if(noQuiz()||timedQuiz()||(G.diff===3&&isFinal(G.cid)))heal('상자: 경험치 대신 HP +40');
     else{G.xp+=xpNeed(G.lvl);toast('상자: 경험치 획득! 레벨업 퀴즈로 이어져요');sfx('lvl');}
   }else if(G.allies.filter(a=>a.type===3&&!a.dead).length>=4){
     heal('상자: 보조 음악가가 이미 최대! HP +40');
@@ -752,7 +796,7 @@ function spawnAlly(type){
   const ang=rnd(0,6.283),d=rnd(40,110),hp=T.hp*(1+.1*G.power);
   G.allies.push({x:G.x+Math.cos(ang)*d,y:G.y+Math.sin(ang)*d,type,v:Math.random()*8|0,hp,mhp:hp,r:T.r,sp:T.sp,dmg:T.dmg*pm(),life:T.life,ac:0,dead:false});
 }
-const timedQuiz=()=>C[G.cid].era===4;
+const timedQuiz=()=>C[G.cid].era===4&&G.diff!==3;
 const isFinal=id=>!EVO[id];
 function addWeapon(id){if(!G.weapons.some(x=>x.id===id))G.weapons.push({id,cd:.5,cnt:0});}
 
@@ -797,8 +841,8 @@ function fire(wp){
     case 'rapid':proj(aim()+rnd(-.13,.13),490,{dmg:w.dmg*m,r:3.5,life:.9});break;
     case 'motif':{
       const k=cnt%4;
-      if(k===0){proj(aim(),520,{dmg:w.dmg*3.8*m,r:11,life:1,pierce:99,kind:'big'});return .5;}
-      proj(aim(),480,{dmg:w.dmg*m,r:4,life:.9});break;}
+      if(k===0){proj(aim(),520,{dmg:w.dmg*3.8*m,r:11,life:1,pierce:99,kind:'big',vs:1.2});return .5;}
+      proj(aim(),480,{dmg:w.dmg*m,r:4,life:.9,vs:1.8});break;}
     case 'sprinkle':{
       const off=cnt*.21;
       for(let i=0;i<8;i++)proj(off+i*Math.PI/4,360,{dmg:w.dmg*m,r:4,life:1});
@@ -832,13 +876,13 @@ function fire(wp){
       break;}
     case 'row':{
       const a=aim(),nx=-Math.sin(a),ny=Math.cos(a);
-      for(let k=-2.5;k<=2.5;k++)proj(a,560,{x:G.x+nx*k*30,y:G.y+ny*k*30,dmg:w.dmg*m,r:5,life:1,pierce:99});
+      for(let k=-2.5;k<=2.5;k++)proj(a,560,{x:G.x+nx*k*30,y:G.y+ny*k*30,dmg:w.dmg*m,r:5,life:1,pierce:99,vs:1.1});
       break;}
     case 'heavy':proj(aim(),230,{dmg:w.dmg*m,r:17,life:1.8,pierce:99,kind:'heavy'});break;
     case 'tent':{
       const near=G.enemies.filter(e=>!e.dead&&(e.x-G.x)**2+(e.y-G.y)**2<230*230).sort((a,b)=>((a.x-G.x)**2+(a.y-G.y)**2)-((b.x-G.x)**2+(b.y-G.y)**2));
       if(!near.length)return .2-w.cd*cdm();
-      for(let i=0;i<8;i++){const t=near[i%near.length],a=Math.atan2(t.y-G.y,t.x-G.x)+(near.length<8?rnd(-.45,.45):0);proj(a,560,{dmg:w.dmg*m,r:9,life:.4,pierce:3,hom:16,kind:'tent',tgt:t});}
+      for(let i=0;i<10;i++){const t=near[i%near.length],a=Math.atan2(t.y-G.y,t.x-G.x)+(near.length<10?rnd(-.45,.45):0);proj(a,560,{dmg:w.dmg*m,r:9,life:.4,pierce:3,hom:16,kind:'tent',tgt:t});}
       break;}
     case 'virtuoso':{
       const a=aim();
@@ -852,7 +896,7 @@ function fire(wp){
 const fin=()=>G.romT!=null;
 function enemyMul(){
   const D=dif(),f=fin();
-  return {hp:(1+G.t/220)*D.hp*(f?1.4+(G.t-G.romT)/200:1),dm:D.dm*(f?1.3:1)};
+  return {hp:(1+G.t/220)*D.hp*(1+.08*impK())*(f?1.4+(G.t-G.romT)/200:1),dm:D.dm*(1+.04*impK())*(f?1.3:1)};
 }
 function spawn(forceType){
   const t=G.t,ang=rnd(0,6.283),d=Math.hypot(W,H)/2+40,M=enemyMul();
@@ -890,13 +934,13 @@ function weaponStep(dt){
       if(wp.tl<=0){wp.tl=1;for(let i=0;i<3;i++)spawnAlly(0);}
       if(wp.tb<=0){wp.tb=2;for(let i=0;i<1;i++)spawnAlly(2);if(!G.hsw)sfx('fire',wp.id);}
       wp.tn=(wp.tn==null?2:wp.tn)-dt;
-      if(wp.tn<=0){wp.tn=5;curW=wp;const off=rnd(0,6.283);for(let i=0;i<10;i++)proj(off+i*Math.PI/5,380,{dmg:20*pm(),r:6,life:1.2,pierce:99});}
+      if(wp.tn<=0){wp.tn=5;curW=wp;const off=rnd(0,6.283);for(let i=0;i<10;i++)proj(off+i*Math.PI/5,380,{dmg:20*pm(),r:6,life:1.2,pierce:99,vs:1.2,fl:1});}
       continue;
     }
     if(wp.cd<=0){
       const w=C[wp.id].w;
       if(w.t==='orbit'||w.t==='shadow'||w.t==='fan'){wp.cd=99;continue;}
-      const n0=G.shots.length,ex=fire(wp);if(!G.hsw)sfx('fire',wp.id);extraShots(n0);
+      const n0=G.shots.length,ex=fire(wp);if(!G.hsw&&!(ex<0))sfx('fire',wp.id);extraShots(n0);
       wp.cd=w.cdr?rnd(w.cdr[0],w.cdr[1])*cdm():w.cd*cdm()+(ex||0);
     }
   }
@@ -975,7 +1019,7 @@ function step(dt){
   if(joy.on){mx+=joy.dx;my+=joy.dy;}
   if(G.demo){G.dang=(G.dang||0)+dt*.7;const hk=G.hdemo?.55:1;mx=Math.cos(G.dang*hk);my=Math.sin(G.dang*hk)*(G.hdemo?.5:.6);}
   const ml=Math.hypot(mx,my);
-  if(ml>0){const f=Math.min(1,ml);mx/=ml;my/=ml;const spd=170*(G.weapons.some(q=>C[q.id].w.t==='shadow')?.95:1)*(G.weapons.some(q=>q.id==='mozart')?1.07:1)*(1+.02*(G.spdB||0))*(G.demo?.5:1);G.x+=mx*spd*f*dt;G.y+=my*spd*f*dt;G.fx=mx;G.fy=my;}
+  if(ml>0){const f=Math.min(1,ml);mx/=ml;my/=ml;const spd=170*(G.weapons.some(q=>q.id==='mozart')?1.07:1)*(1+.02*(G.spdB||0))*(G.demo?.5:1);G.x+=mx*spd*f*dt;G.y+=my*spd*f*dt;G.fx=mx;G.fy=my;}
 
   /* 바흐의 그림자(잔상) 기록 */
   {
@@ -989,11 +1033,11 @@ function step(dt){
     if(G.spawnT<=0){G.spawnT=.55;if(G.enemies.length<9){const sd=Math.random()<.5?-1:1,hp=16;G.enemies.push({x:G.x+sd*rnd(170,330),y:G.y+rnd(-70,40),type:Math.random()<.25?1:0,v:Math.random()*60|0,hp,mhp:hp,r:10,sp:34,dmg:0,xp:0,orb:0,flash:0,ph:rnd(0,6.283),dead:false,ac:0,sh:0,fn:0});}}
   }else if(G.spawnT<=0){
     const D=dif();
-    G.spawnT=Math.max(.07,Math.max(.26,1-G.t*.0035)/(D.sp*(fin()?1.5:1)));
+    G.spawnT=Math.max(.07,Math.max(.26,1-G.t*.0035)/(D.sp*(fin()?1.5:1)*(G.diff===3?1+Math.max(0,1-G.t/240)*1.2:1)));
     const n=G.t>150?2:1;
     for(let i=0;i<n&&G.enemies.length<D.cap;i++)spawn();
   }
-  if(fin()){
+  if(fin()&&G.diff!==3){
     G.eliteT-=dt;
     if(G.eliteT<=0){
       G.eliteT=14/Math.sqrt(dif().sp);
@@ -1002,7 +1046,7 @@ function step(dt){
     }
   }
 
-  panicUpdate(dt);bossUpdate(dt);midUpdate(dt);ebUpdate(dt);
+  impUpdate(dt);panicUpdate(dt);bossUpdate(dt);midUpdate(dt);ebUpdate(dt);
 
   weaponStep(dt);
   if(G.sched.length){const due=G.sched.filter(s=>s.at<=G.t);G.sched=G.sched.filter(s=>s.at>G.t);for(const s of due)s.f();}
@@ -1011,8 +1055,8 @@ function step(dt){
   if(G.msg){G.msg.t-=dt;if(G.msg.t<=0)G.msg=null;}
   G.ct-=dt;
   if(G.ct<=0){
-    G.ct=rnd(16,26);
-    if(G.chests.length<5){const a=rnd(0,6.283),d=rnd(260,520);G.chests.push({x:G.x+Math.cos(a)*d,y:G.y+Math.sin(a)*d,t:0});}
+    G.ct=G.diff===3?15:rnd(16,26);
+    if(G.diff===3||G.chests.length<5){const a=rnd(0,6.283),d=rnd(260,520);G.chests.push({x:G.x+Math.cos(a)*d,y:G.y+Math.sin(a)*d,t:0});}
   }
   for(const ch of G.chests){
     ch.t+=dt;
@@ -1040,7 +1084,7 @@ function step(dt){
     if(a.ac>0)a.ac-=dt;
     if(a.type===3){
       const dx=G.x-a.x,dy=G.y-a.y,dd=Math.hypot(dx,dy)||1;
-      const ps=170*(G.weapons.some(q=>C[q.id].w.t==='shadow')?.95:1)*(G.weapons.some(q=>q.id==='mozart')?1.07:1)*(1+.02*(G.spdB||0)),v=ps*1.1*(G.demo?.5:1),st=Math.min(dd,v*dt);
+      const ps=170*(G.weapons.some(q=>q.id==='mozart')?1.07:1)*(1+.02*(G.spdB||0)),v=ps*1.1*(G.demo?.5:1),st=Math.min(dd,v*dt);
       if(dd>HF_OUT)a.fol=true;else if(dd<HF_IN)a.fol=false;
       if(a.fol){a.x+=dx/dd*st;a.y+=dy/dd*st;if(a.hc){a.hc.fx=dx/dd;a.hc.fy=dy/dd;}}
       continue;
@@ -1130,7 +1174,7 @@ function step(dt){
     const spd=e.sp;e.x+=(ux-uy*wob)*spd*dt;e.y+=(uy+ux*wob)*spd*dt;
     if(tg&&td<tg.r+e.r+4&&!(e.ac>0)){if(tg.type===3)tg.hp-=e.dmg*.7;e.ac=.5;}
     if(e.flash>0)e.flash-=dt;if(e.orb>0)e.orb-=dt;if(e.fn>0)e.fn-=dt;if(e.sh>0)e.sh-=dt;if(e.ac>0)e.ac-=dt;
-    if(d<e.r+12&&G.inv<=0){G.hp-=e.dmg*(G.weapons.some(x=>C[x.id].w.dr)?.8:1)*dfm();G.inv=.6;G.hit=.18;sfx('hurt');}
+    if(d<e.r+12&&G.inv<=0){G.hp-=e.dmg*dfm();G.inv=.6;G.hit=.18;sfx('hurt');}
     if(d>far){const a=rnd(0,6.283),dd=Math.hypot(W,H)/2+40;e.x=G.x+Math.cos(a)*dd;e.y=G.y+Math.sin(a)*dd;}
   }
   if(G.inv>0)G.inv-=dt;if(G.hit>0)G.hit-=dt;
@@ -1159,7 +1203,10 @@ function step(dt){
   if(timedQuiz()&&!inBoss()&&!G.demo){
     if(G.qT==null)G.qT=G.t+30;
     if(G.t>=G.qT){G.qT=G.t+30;G.lvl++;openQuiz();}
-  }else if(!noQuiz()&&G.xp>=xpNeed(G.lvl))levelUp();
+  }else if(G.diff===3&&!G.demo&&!isFinal(G.cid)&&G.xp>=xpNeed(G.lvl)){
+    G.xp-=xpNeed(G.lvl);G.lvl++;G.power++;G.hp=Math.min(G.maxhp,G.hp+20);sfx('lvl');
+    G.evoOpts=EVO[G.cid];evoChoices(G.evoOpts);
+  }else if(!noQuiz()&&G.diff!==3&&G.xp>=xpNeed(G.lvl))levelUp();
 }
 
 /* --- 그리기 --- */
@@ -1238,6 +1285,7 @@ function wavyLine(pts,w0,w1,col,al){
   ctx.globalAlpha=1;ctx.lineCap='butt';
 }
 function drawTent(camX,camY){
+  drawEliteTent(camX,camY);
   const li=G.weapons.some(x=>C[x.id].w.t==='tent'),sb=G.weapons.some(x=>C[x.id].w.t==='tent1');
   const px=G.x-camX,py=G.y-camY,col=C.liszt.col;
   let lastT=null;for(const s of G.shots)if(s.kind==='tent1'&&(s.own||null)===(G.hown||null))lastT=s;
@@ -1247,8 +1295,8 @@ function drawTent(camX,camY){
     wavyLine(pts,16,5,'#2e1a08',.9);wavyLine(pts,11,3,'#9a6230',1);wavyLine(pts,4,1.5,'#d9a066',.9);
   }
   if(li){
-    for(let i=0;i<8;i++){
-      const b=i*Math.PI/4+G.t*.3,L=44+7*Math.sin(G.t*2.2+i*1.3),pts=[];
+    for(let i=0;i<10;i++){
+      const b=i*Math.PI/5+G.t*.3,L=44+7*Math.sin(G.t*2.2+i*1.3),pts=[];
       for(let k=0;k<=8;k++){const f=k/8,r=12+L*f,off=Math.sin(G.t*5+k*.8+i*1.7)*6*f,a=b+off/Math.max(12,r);pts.push([px+Math.cos(a)*r,py+Math.sin(a)*r]);}
       wavyLine(pts,6,2,'#5a3a14',.85);wavyLine(pts,4,1.2,col,.95);
     }
@@ -1303,7 +1351,7 @@ function drawEnding(){
   for(const f of G.fw){const q=f.t/1.1;ctx.globalAlpha=1-q;ctx.fillStyle=f.c;for(let i=0;i<16;i++){const a=i*.3927,r=q*130*(1-.3*q);ctx.beginPath();ctx.arc(f.x+Math.cos(a)*r,f.y+Math.sin(a)*r+q*q*30,3.2*(1-q*.5),0,6.283);ctx.fill();}}
   ctx.globalAlpha=1;
   for(const p of G.cf){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);ctx.restore();}
-  if(t>=ED.flash){const a=Math.min(1,(t-ED.flash)/.5);ctx.globalAlpha=a;ctx.font='700 30px "Gowun Batang",serif';ctx.textAlign='center';ctx.fillStyle='#ffe9a8';ctx.strokeStyle='#2a1608';ctx.lineWidth=5;ctx.strokeText('✦ 피날레 ✦',W/2,H*.2);ctx.fillText('✦ 피날레 ✦',W/2,H*.2);}
+  if(t>=ED.flash){const a=Math.min(1,(t-ED.flash)/.5);ctx.globalAlpha=a;const fs=Math.round(Math.min(96,Math.max(54,W*.14)));ctx.font=fs+'px "Great Vibes","Gowun Batang",cursive';ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(255,214,90,.9)';ctx.shadowBlur=22;ctx.strokeStyle='#4a2a0a';ctx.lineWidth=7;ctx.lineJoin='round';ctx.strokeText('Finale!',W/2,H*.2);const gr=ctx.createLinearGradient(0,H*.2-fs/2,0,H*.2+fs/2);gr.addColorStop(0,'#fffbe0');gr.addColorStop(.55,'#ffd95a');gr.addColorStop(1,'#ff9f43');ctx.fillStyle=gr;ctx.fillText('Finale!',W/2,H*.2);ctx.shadowBlur=0;ctx.textBaseline='alphabetic';}
   ctx.restore();
 }
 function drawMsg(){
@@ -1550,7 +1598,16 @@ function draw(){
       ctx.globalAlpha=.2;ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,s.r*.55,a-.8,a+.8);ctx.stroke();
       ctx.globalAlpha=1;ctx.lineCap='butt';
     }
-    else note(x,y,s.kind==='big'?s.r*.7:s.kind==='boom'?9:s.r*.8,s.col);
+    else{
+      const nr=(s.kind==='big'?s.r*.7:s.kind==='boom'?9:s.r*.8)*(s.vs||1);
+      if(s.fl){
+        const ph=(Math.sin(G.t*22+s.x*.03+s.y*.02)+1)/2,gr=ctx.createRadialGradient(x,y,0,x,y,nr*4);
+        ctx.save();ctx.globalCompositeOperation='lighter';
+        gr.addColorStop(0,'rgba(255,240,170,'+(.35+.5*ph)+')');gr.addColorStop(1,'rgba(255,200,90,0)');
+        ctx.fillStyle=gr;ctx.beginPath();ctx.arc(x,y,nr*4,0,6.283);ctx.fill();ctx.restore();
+        note(x,y,nr,ph>.55?'#fff6c8':s.col);
+      }else note(x,y,nr,s.col);
+    }
   }
   /* 주위를 도는 음표 */
   drawFx(camX,camY);
@@ -1605,7 +1662,7 @@ function auInit(){
   if(!AU.ctx){
     try{
       const AC=window.AudioContext||window.webkitAudioContext;
-      AU.ctx=new AC();AU.g=AU.ctx.createGain();AU.g.gain.value=AU.mute?0:2.4;
+      AU.ctx=new AC();AU.g=AU.ctx.createGain();AU.g.gain.value=AU.mute?0:1.92;
       const cp=AU.ctx.createDynamicsCompressor();AU.g.connect(cp);cp.connect(AU.ctx.destination);
     }catch(e){AU.ctx=null;}
   }
@@ -1618,7 +1675,7 @@ function auInit(){
 function auMute(){
   AU.mute=!AU.mute;
   try{localStorage.setItem('musician-survival-mute',AU.mute?'1':'0');}catch(e){}
-  if(AU.g)AU.g.gain.value=AU.mute?0:2.4;
+  if(AU.g)AU.g.gain.value=AU.mute?0:1.92;
   if(AU.bgm)AU.bgm.muted=AU.mute;
   const b=document.getElementById('mu');if(b)b.textContent=AU.mute?'소리 끔':'소리 켬';
 }
@@ -1643,6 +1700,8 @@ function sfx(n,arg){
     if(now-AU.t<45||now-(AU.lf[arg]||0)<110)return;
     AU.t=now;AU.lf[arg]=now;
     if(arg==='liszt'){for(let i=0;i<6;i++){const f=900+Math.random()*2800;tone(f,f*(.5+Math.random()),.04,'sawtooth',.045,i*.02);}tone(120,60,.12,'square',.04);return;}
+    if(arg==='mahler'){tone(392,392,.1,'sawtooth',.05);tone(392.8,392.8,.1,'square',.025);tone(523,528,.28,'sawtooth',.06,.1);tone(523.8,529,.28,'square',.03,.1);tone(1046,1056,.2,'sine',.015,.1);return;}
+    if(arg==='brahms'){[130.8,164.8,196,261.6].forEach((f,i)=>{tone(f,f*.99,.42,'triangle',.07,i*.012);tone(f*2,f*2,.3,'sine',.03,i*.012);});return;}
     const k=1+(Object.keys(C).indexOf(arg)%7)*.03;
     tone(d[1]*k,d[2]*k,d[3],d[0],d[4]);
   }else if(n==='hurt'){tone(160,50,.14,'square',.09);}
@@ -1780,14 +1839,14 @@ function playSong(title){
 /* ===== 화면, 퀴즈, 진화, 입력 ===== */
 const modal=$('modal');
 let LKT=0,LKI=0;const locked=()=>performance.now()<LKT;
-function lockPanel(sec){
+function lockPanel(sec,auto){
   /* 안내창은 처음 몇 초 동안 넘길 수 없다 */
   LKT=performance.now()+sec*1000;clearInterval(LKI);modal.classList.add('lk');
-  const pn=modal.querySelector('.panel'),bt=modal.querySelector('.btn'),ob=bt?bt.textContent:'';let nt=null;
+  const pn=modal.querySelector('.panel'),bt=auto?null:modal.querySelector('.btn'),ob=bt?bt.textContent:'';let nt=null;
   if(!bt&&pn){nt=document.createElement('p');nt.className='note lkn';pn.appendChild(nt);}
   const upd=()=>{const r=Math.ceil((LKT-performance.now())/1000);
     if(r<=0){clearInterval(LKI);modal.classList.remove('lk');if(bt)bt.textContent=ob;if(nt)nt.remove();return;}
-    if(bt)bt.textContent=ob+' ('+r+')';if(nt)nt.textContent='내용을 읽어 보세요. '+r+'초 뒤에 고를 수 있어요.';};
+    if(bt)bt.textContent=ob+' ('+r+')';if(nt)nt.textContent=auto?r+'초 뒤 자동으로 넘어가요.':'내용을 읽어 보세요. '+r+'초 뒤에 고를 수 있어요.';};
   upd();LKI=setInterval(upd,200);
 }
 const show=h=>{clearInterval(LKI);LKT=0;modal.classList.remove('lk');modal.classList.remove('dead','dexd');modal.innerHTML=h;modal.classList.add('on');modal.scrollTop=0;};
@@ -1806,7 +1865,7 @@ function saveBest(won){
 
 /* --- 처음 화면 --- */
 function titleScreen(){
-  G=mk('guido');
+  G=mk('guido');setEvo(false);
   const b=loadBest(DI);
   show(`<div class="panel">
     <p class="eyebrow">대표곡을 맞혀 진화하라</p>
@@ -1819,14 +1878,62 @@ function titleScreen(){
       <li><b>클리어</b> 낭만 시대 음악가가 된 뒤 120초, 바로크의 몬테베르디는 180초를 버티면 암살 시도를 막아 낸 거예요. 최종 단계에서는 적이 더 강해지고 정예 단원이 나타나요.</li>
     </ul>
     <p class="eyebrow">난이도</p>
-    <div class="row" style="margin-bottom:14px">${DIFFS.map((d,i)=>`<button class="btn ghost dif${i===DI?' on':''}" style="margin:0" data-a="diff:${i}">${d.n}</button>`).join('')}</div>
+    <div class="row" style="margin-bottom:14px">${DIFFS.map((d,i)=>`<button class="btn ghost dif${i===3?' imp':''}${i===DI?' on':''}" style="margin:0" data-a="diff:${i}">${d.n}</button>`).join('')}</div>
     <p class="small" style="margin:-6px 0 14px">${DIFFS[DI].d}</p>
     <button class="btn go" data-a="begin" style="display:block;width:100%;margin:6px 0 14px;padding:16px 18px;font-size:22px;font-family:var(--f-display);letter-spacing:.2em">시작하기</button>
     <p class="small">이동: 방향키·WASD, 터치는 화면을 끌어서 이동. 퀴즈는 1·2·3 키로도 고를 수 있어요.${b?`<br>최고 기록(${DIFFS[DI].n}): ${b.won?'클리어 · ':''}${b.era} 시대 ${b.n} · ${fmt(b.t)}`:''}</p>
     <div class="row" style="display:flex;gap:8px;margin:14px 0 0"><button class="btn ghost" data-a="dex" style="flex:1;margin:0;white-space:nowrap;padding-left:6px;padding-right:6px">📖 도감/공격모션 보기</button><button class="btn ghost" data-a="qr" style="flex:none;margin:0">QR 코드</button></div>
   </div>`);
 }
+function impIntro(){
+  auInit();G=mk('gregorio');G.diff=DI;G.mode='sel';G.selOpts=[];
+  bgCur.bg=hex(ERA[0].bg);bgCur.ln=hex(ERA[0].ln);
+  show(`<div class="panel">
+    <p class="eyebrow">불가능 모드</p>
+    <h2>정말 불가능한 도전이에요</h2>
+    <ul class="rules">
+      <li><b>한 줄 진화</b> 모든 작곡가가 태어난 순서대로 이어져요. 진화 길은 고를 수 없어요. 그레고리오 → 귀도 → … → 말러. 경험치가 차면 퀴즈 없이 바로 진화해요.</li>
+      <li><b>승리 조건</b> 마지막 진화 후 120초를 버티세요.</li>
+      <li><b>어둠의 음악단</b> 처음부터 적이 많이 몰려오고, 보스가 일찍·자주 나타나며, 시간이 갈수록 훨씬 거세져요. 상자는 15초마다 생겨요.</li>
+    </ul>
+    <p class="note" style="color:var(--gold);margin:8px 0 0">시작 전 시험: 바로크 이후 작곡가(르네상스 제외)의 대표곡 퀴즈 4개를 맞혀야 시작해요. 시작한 뒤에는 퀴즈 없이 바로 진화해요.</p>
+    <button class="btn go" data-a="impq" style="margin-top:6px">도전하기</button>
+    <button class="btn ghost" data-a="title" style="margin-top:8px">◀ 처음으로</button>
+  </div>`);
+  lockPanel(4);
+}
+function impQuiz(fb){
+  G.mode='iq';G.iqN=G.iqN||0;
+  const ids=Object.keys(C).filter(k=>C[k].era>=2&&k!=='monteverdi2'),id=ids[Math.random()*ids.length|0],c=C[id],pool=POOL[c.pool],ci=Math.random()*pool.length|0;
+  const others=shuffle(Object.keys(POOL).filter(k=>k!==c.pool)).slice(0,2);
+  const opts=shuffle([{o:c.pool,i:ci,ok:true},...others.map(k=>({o:k,i:Math.random()*POOL[k].length|0,ok:false}))]);
+  G.q={opts,ci,id};
+  show(`<div class="panel">
+    <p class="eyebrow">불가능 모드 · 시작 시험 ${G.iqN}/4</p>
+    <h2>${c.n}의 대표곡은 무엇일까요?</h2>
+    ${fb?`<p class="note" style="color:${fb.ok?'var(--gold)':'#ff8a8a'}">${fb.s}</p>`:''}
+    <div class="cards">${opts.map((o,i)=>`<button class="card" data-q="${i}"><kbd>${i+1}</kbd><span class="t">${POOL[o.o][o.i][0]}</span></button>`).join('')}</div>
+    <p class="small">4개를 맞히면 게임이 시작돼요. 틀리면 처음부터 다시 시작해요.</p>
+    <button class="btn ghost" data-a="title" style="margin-top:8px">◀ 처음으로</button>
+  </div>`);
+}
+function impAnswer(i){
+  const q=G.q,ok=i>=0&&q.opts[i].ok,song=POOL[C[q.id].pool][q.ci][0];
+  sfx(ok?'ok':'bad');
+  if(ok){G.iqN++;if(G.iqN>=4){startGame('gregorio');G.msg={s:'시험 통과! 어둠의 음악단이 몰려와요',t:3};return;}}
+  if(!ok){
+    const had=G.iqN;G.iqN=0;
+    show(`<div class="panel" style="text-align:center"><p class="eyebrow">불가능 모드 · 시작 시험 ${had}/4 → 0/4</p>
+      <h1 style="font-size:clamp(30px,8.5vw,46px);margin:14px 0 10px;color:#ff5a5a;text-shadow:0 0 22px #ff2b2b88;line-height:1.25;word-break:keep-all">넌 도전할 자격이 없다.</h1>
+      <p class="lead">정답은 〈${song}〉이었어요.<br>4문제를 처음부터 다시 맞혀야 해요.</p>
+      <button class="btn" data-a="impq">다시 도전</button>
+      <button class="btn ghost" data-a="title" style="margin-top:8px">◀ 처음으로</button></div>`);
+    return;
+  }
+  impQuiz({ok,s:'정답! 〈'+song+'〉'});
+}
 function pickStart(){
+  if(DI===3)return impIntro();
   auInit();G=mk('guido');G.diff=DI;G.mode='sel';
   bgCur.bg=hex(ERA[0].bg);bgCur.ln=hex(ERA[0].ln);
   G.selOpts=['guido','gregorio'];
@@ -1848,7 +1955,7 @@ function pauseGame(){
 function resumeGame(){if(G.mode!=='pause')return;G.mode='play';hide();}
 function startGame(id){
   auInit();
-  G=mk(id);G.diff=DI;G.mode='play';hide();
+  setEvo(DI===3);G=mk(id);G.diff=DI;G.mode='play';hide();
   bgCur.bg=hex(ERA[0].bg);bgCur.ln=hex(ERA[0].ln);
 }
 
@@ -1871,6 +1978,7 @@ function openQuiz(){
   </div>`);
 }
 function answer(i){
+  if(G.mode==='iq'){impAnswer(i);return;}
   if(G.mode!=='quiz')return;
   const q=G.q,c=C[G.cid],song=POOL[c.pool][q.ci],ok=i>=0&&q.opts[i].ok;
   let evo=false;
@@ -1882,6 +1990,7 @@ function answer(i){
   }
   G.pendEvo=evo;G.mode='result';G.rt=G.rtm=7.5;sfx(ok?'ok':'bad');
   let melDur=0;if(ok){melDur=playSong(song[0]);if(melDur>0)G.rt=G.rtm=Math.max(7.5,melDur+2);}
+  if(G.diff===3)G.rt=G.rtm=4.2;
   let wrong='';
   if(!ok){
     if(i<0)wrong=`<p class="other">시간이 지났어요.</p>`;
@@ -1894,17 +2003,18 @@ function answer(i){
     <p class="expl">${song[1]}</p>
     ${C[G.cid].note?`<p class="note">${C[G.cid].note}</p>`:''}
     ${wrong}
-    ${evo?'<p class="note" style="color:var(--gold)">대표곡을 모두 모았어요. 다음 시대로 진화합니다.</p>':''}
+    ${evo&&G.diff!==3?'<p class="note" style="color:var(--gold)">대표곡을 모두 모았어요. 다음 시대로 진화합니다.</p>':''}
+    ${evo&&G.diff===3?(()=>{const nx=EVO[G.cid][0],n=C[nx],ne=n.era!==c.era;G.evoOpts=[nx];return `<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--gold)"><p class="eyebrow" style="margin:0 0 4px">▼ 진화${ne?' · '+ERA[n.era].n+' 시대 진입!':''}</p><h3 style="margin:0 0 6px">${c.n} → ${n.n}</h3><div class="cards" style="pointer-events:none">${evoCard(nx,0)}</div></div>`;})():''}
     <p class="note buff">${ok?'위력 +10% · 체력 조금 회복':'이번에는 강화가 없어요'}</p>
     <div class="timer"><i id="rbar"></i></div>
-    <button class="btn" data-a="next">계속</button>
+    ${G.diff===3?'':'<button class="btn" data-a="next">계속</button>'}
   </div>`);
-  lockPanel(4);
+  lockPanel(4,G.diff===3);
 }
 function closeResult(){
   if(G.mode!=='result'||locked())return;
   stopSong();
-  if(G.pendEvo){openEvo();return;}
+  if(G.pendEvo){if(G.diff===3){G.mode='evo1';pickEvo(G.evoOpts[0]);return;}openEvo();return;}
   G.mode='play';hide();
 }
 
@@ -1940,6 +2050,7 @@ function nukeAnswer(i){
 /* --- 진화 --- */
 function celebrate(list){
   const c=C[G.cid],n=C[list[0]],ne=ERA[n.era],newEra=n.era!==c.era;
+  if(G.diff===3&&!newEra){evoChoices(list);return;}
   G.mode='cele';G.ce=4;sfx('win');
   const cols=['#ffd23f','#ff6b8a','#6ec1ff','#7be39a','#c4a6f0','#fff'];
   let conf='';for(let i=0;i<46;i++){conf+=`<i style="left:${Math.random()*100}%;background:${cols[i%cols.length]};animation-delay:${(Math.random()*1.6).toFixed(2)}s;animation-duration:${(2+Math.random()*1.8).toFixed(2)}s;width:${5+Math.random()*6|0}px;height:${8+Math.random()*10|0}px"></i>`;}
@@ -1982,17 +2093,17 @@ function evoChoices(list0){
   const all=EVO[G.cid],c=C[G.cid];
   if(all.length===1){
     const list=all;G.evoOpts=list;
-    G.mode='evo1';G.et=20;sfx('evo');
+    G.mode='evo1';G.et=G.diff===3?4.2:20;sfx('evo');
     const n=C[list[0]];
     show(`<div class="panel">
-      <p class="eyebrow">진화</p>
+      <p class="eyebrow">진화${n.era!==c.era?' · '+ERA[n.era].n+' 시대 진입!':''}</p>
       <h2>${c.n}, ${n.n}(으)로 진화!</h2>
       <p class="lead">${n.evoNote||''}</p>
-      <div class="cards">${evoCard(list[0],0)}</div>
+      <div class="cards"${G.diff===3?' style="pointer-events:none"':''}>${evoCard(list[0],0)}</div>
       <div class="timer"><i id="ebar"></i></div>
-      <button class="btn" data-e="${list[0]}">진화하기</button>
+      ${G.diff===3?'':`<button class="btn" data-e="${list[0]}">진화하기</button>`}
     </div>`);
-    lockPanel(4);
+    lockPanel(4,G.diff===3);
     return;
   }
   const list=list0;
@@ -2113,7 +2224,7 @@ function summary(){
     <p class="eyebrow" style="margin-top:12px">내가 모은 대표곡 ${G.learned.length}곡</p>${learned}`;
 }
 function over(){modal.classList.remove('dead');sfx('over');G.mode='over';saveBest(false);show(`<div class="panel"><p class="eyebrow">어둠의 습격</p><h2>어둠의 음악단에 의해 유명한 음악가가 사라졌어요.</h2><p class="lead">사라진 음악가: ${C[G.cid].n}</p>${summary()}<button class="btn" data-a="title">메인으로 나가기</button></div>`);}
-function win(){sfx('win');G.mode='win';saveBest(true);show(`<div class="panel"><p class="eyebrow" style="text-align:center">피날레</p><h1 style="text-align:center;font-size:clamp(34px,9vw,52px);margin:6px 0 10px;color:var(--gold);text-shadow:0 0 22px #ffd23f88">✦ 축하합니다! ✦</h1><h2 style="text-align:center">암살 시도를 막아 냈어요!</h2><p class="lead">클래식 음악의 발전을 막으려던 어둠의 음악단의 암살 시도에서 음악가가 살아남았어요!</p><p class="lead" style="margin-top:0">살아남은 음악가: ${C[G.cid].n}</p>${summary()}<button class="btn" data-a="title">처음으로</button></div>`);}
+function win(){sfx('win');G.mode='win';saveBest(true);show(`<div class="panel"><p style="text-align:center;margin:0;font:clamp(40px,11vw,60px) 'Great Vibes','Gowun Batang',cursive;color:#ffd95a;text-shadow:0 0 18px #ffd23f88">Finale!</p><h1 style="text-align:center;font-size:clamp(34px,9vw,52px);margin:6px 0 10px;color:var(--gold);text-shadow:0 0 22px #ffd23f88">✦ 축하합니다! ✦</h1><h2 style="text-align:center">암살 시도를 막아 냈어요!</h2><p class="lead">클래식 음악의 발전을 막으려던 어둠의 음악단의 암살 시도에서 음악가가 살아남았어요!</p><p class="lead" style="margin-top:0">살아남은 음악가: ${C[G.cid].n}</p>${summary()}<button class="btn" data-a="title">처음으로</button></div>`);}
 
 
 var qrcode = function() {
@@ -3719,6 +3830,7 @@ var qrcode = function() {
     return toUTF8Array(s);
   };
 }();
+try{document.fonts.load('64px "Great Vibes"','Finale!');}catch(e){}
 const SHARE_URL='https://eumflix.github.io/ccsurvival/';
 function openQR(){
   const qr=qrcode(0,'M');qr.addData(SHARE_URL);qr.make();
@@ -3726,11 +3838,12 @@ function openQR(){
   for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(qr.isDark(r,c))d+=`M${c+m},${r+m}h1v1h-1z`;
   const t=n+m*2;
   show(`<div class="panel" style="text-align:center">
-    <p class="eyebrow">QR 코드</p>
-    <h2>클래식 작곡가 서바이벌</h2>
-    <p class="lead">휴대폰 카메라로 비춰 보세요.</p>
-    <svg viewBox="0 0 ${t} ${t}" shape-rendering="crispEdges" style="width:min(100%,360px);height:auto;background:#fff;display:block;margin:6px auto 10px;border:6px solid #fff"><path d="${d}" fill="#15110f"/></svg>
-    <p class="small" style="word-break:break-all;margin:0 0 12px">${SHARE_URL}</p>
+    <img alt="음플릭스" src="${$('lg').src}" style="display:block;margin:0 auto 4px;height:25px;width:auto;max-width:50%">
+    <h2 style="margin:0 0 2px">클래식 작곡가 서바이벌</h2>
+    <p class="lead" style="margin:0 0 4px">휴대폰 카메라로 비춰 보세요.</p>
+    <svg viewBox="0 0 ${t} ${t}" shape-rendering="crispEdges" style="width:min(100%,360px);height:auto;background:#fff;display:block;margin:0 auto 6px;border:6px solid #fff"><path d="${d}" fill="#15110f"/></svg>
+    <p class="small" style="word-break:break-all;margin:0 0 4px">${SHARE_URL}</p>
+    <p class="small" style="margin:0 0 8px">제작 : 대제중학교 이현도</p>
     <button class="btn" data-a="dexx" style="margin:0">닫기</button>
   </div>`);
 }
@@ -3754,7 +3867,7 @@ function startDemo(id){
   auInit();
   G=mk(id);G.diff=DI;G.mode='play';G.demo=true;G.camF=.2;
   const c=C[id],era=ERA[c.era],pool=POOL[c.pool]||[];
-  const prev=DEXIDS.filter(k=>(EVO[k]||[]).includes(id)),next=EVO[id]||[];
+  const prev=DEXIDS.filter(k=>(EVO0[k]||[]).includes(id)),next=EVO0[id]||[];
   const i=DEXIDS.indexOf(id),pv=DEXIDS[(i+DEXIDS.length-1)%DEXIDS.length],nx=DEXIDS[(i+1)%DEXIDS.length];
   bgCur.bg=hex(era.bg);bgCur.ln=hex(era.ln);
   show(`<style>#modal.dexd{align-items:flex-end;padding:0;background:linear-gradient(to bottom,transparent 0,transparent 36%,#0d0a09f2 58%);pointer-events:none}#modal.dexd .panel{pointer-events:auto;max-height:66%;overflow:auto;max-width:680px}</style>
@@ -3811,7 +3924,8 @@ modal.addEventListener('click',ev=>{auInit();
   else if(b.dataset.r)b.dataset.r==='go'?rcGo():rcHold();
   else{
     const a=b.dataset.a;
-    if(a.startsWith('start:'))startGame(a.slice(6));
+    if(a==='impq')impQuiz();
+    else if(a.startsWith('start:'))startGame(a.slice(6));
     else if(a==='next')closeResult();
     else if(a==='begin')pickStart();
     else if(a==='resume')resumeGame();
@@ -3835,6 +3949,7 @@ addEventListener('keydown',e=>{auInit();
   if((k==='escape'||k==='p')&&G.mode==='play'&&!G.demo){pauseGame();return;}
   if((k==='escape'||k==='p')&&G.mode==='pause'){resumeGame();return;}
   if(G.mode==='quiz'&&'123'.includes(k)&&k)answer(+k-1);
+  if(G.mode==='iq'&&'123'.includes(k)&&k)answer(+k-1);
   else if(G.mode==='nq'&&'123'.includes(k)&&k)nukeAnswer(+k-1);
   else if(G.mode==='sel'&&G.selOpts[+k-1])startGame(G.selOpts[+k-1]);
   else if(G.mode==='cele'&&(k==='enter'||k===' '))closeCele();
@@ -3869,7 +3984,7 @@ function hud(){
   setT('lv','Lv '+G.lvl);setT('kl',G.kills+'마리');setT('tm',fmt(G.t));
   setT('lin',G.lineage.map(id=>C[id].n).join(' → '));
   $('hpb').style.width=Math.max(0,G.hp/G.maxhp*100)+'%';
-  $('xpb').style.width=(noQuiz()?0:timedQuiz()?Math.max(0,Math.min(100,(1-((G.qT==null?G.t+30:G.qT)-G.t)/30)*100)):Math.min(100,G.xp/xpNeed(G.lvl)*100))+'%';
+  $('xpb').style.width=(noQuiz()||(G.diff===3&&isFinal(G.cid))?0:timedQuiz()?Math.max(0,Math.min(100,(1-((G.qT==null?G.t+30:G.qT)-G.t)/30)*100)):Math.min(100,G.xp/xpNeed(G.lvl)*100))+'%';
   const sig=need?need+':'+G.got.length:'final'+timedQuiz()+G.cid;
   if(cache.sg!==sig){
     cache.sg=sig;
