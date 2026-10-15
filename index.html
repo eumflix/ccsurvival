@@ -601,23 +601,44 @@ function bossDown(i){
   const bs=G.boss&&G.boss.bs[i];if(!bs||!bs.alive)return;
   bs.alive=false;const ps=bossPos(i);
   G.eb=G.eb.filter(b=>b.o!==i);
-  G.fxs.push({k:'boom',x:ps.x,y:ps.y,R:150,t:0,d:.5,col:BOSSES[i].col});
-  G.msg={s:BOSSES[i].nm+' 격파!',t:2.4};sfx('evo');
+  const kd=bs.kind??i;
+  G.fxs.push({k:'boom',x:ps.x,y:ps.y,R:150,t:0,d:.5,col:BOSSES[kd].col});
+  G.msg={s:BOSSES[kd].nm+' 격파!',t:2.4};sfx('evo');
+}
+function ensureBoss(){if(!G.boss){G.boss={bs:[0,1,2].map(()=>({sp:false,alive:false,t:0,c:0,n:0,e:null})),pan:false};G.eb=[];}return G.boss;}
+function placeBoss(bs,i,kind,ang){
+  const D=dif(),hp=2000*(D.hp||1);
+  bs.kind=kind;bs.sp=true;bs.alive=true;
+  bs.x=G.x+Math.cos(ang)*bossRadius()*1.8;bs.y=G.y+Math.sin(ang)*bossRadius()*1.8;
+  bs.e={x:bs.x,y:bs.y,type:3,v:0,hp,mhp:hp,r:46,sp:0,dmg:0,xp:0,orb:0,flash:0,ph:0,dead:false,boss:i,ac:0,sh:0,fn:0};
+  G.enemies.push(bs.e);
+}
+/* 낭만 시대에 늦게 도달하면 어둠의 음악단이 간부를 계속 보낸다(최종 보스는 처음 세 자리 이후 새 자리에 추가) */
+function panicBoss(kind,ang,fixedSlot){
+  const b=ensureBoss();b.pan=true;let i;
+  if(fixedSlot!=null&&!b.bs[fixedSlot].sp)i=fixedSlot;else{b.bs.push({sp:false,alive:false,t:0,c:0,n:0,e:null});i=b.bs.length-1;}
+  placeBoss(b.bs[i],i,kind,ang);
+}
+function panicUpdate(dt){
+  if(G.demo||G.romT!=null||C[G.cid].era>=4)return;
+  const t=G.t;if(t<270)return;
+  G.pan=true;
+  if(G.pmT==null)G.pmT=270;
+  if(t>=360&&!G.pS2){G.pS2=true;for(let j=0;j<4;j++)spawnMid(j,j*1.5708);G.msg={s:'어둠의 음악단 간부 네 명이 사방에서 나타났어요!',t:3.6};}
+  if(t>=420&&!G.pS3){G.pS3=true;G.pmT=Math.min(G.pmT,t);G.pfT=t+30;for(let k=0;k<3;k++)panicBoss(k,BOSSES[k].ang,k);G.msg={s:'어둠의 음악단 최고 간부 셋이 나타났어요!',t:3.6};sfx('evo');}
+  if(t>=G.pmT){const iv=t>=420?10:30,j=(G.pmN=(G.pmN||0)+1)%4;spawnMid(j);G.pmT+=iv;}
+  if(G.pS3&&t>=G.pfT){G.pfT+=30;panicBoss(Math.random()*3|0,rnd(0,6.283));G.msg={s:'어둠의 음악단 최고 간부가 또 나타났어요!',t:3.2};sfx('evo');}
 }
 function bossUpdate(dt){
-  if(!inBoss()){if(G.boss){G.boss=null;G.eb=[];G.enemies=G.enemies.filter(e=>e.boss==null);}return;}
-  if(!G.boss){G.boss={bs:[0,1,2].map(()=>({sp:false,alive:false,t:0,c:0,n:0,e:null}))};G.eb=[];}
-  const left=G.winT-(G.t-G.romT),D=dif(),sc=[1.25,1,.85][G.diff]||1;
-  for(let i=0;i<3;i++){
-    const bs=G.boss.bs[i],col=BOSSES[i].col;
-    const slot=(FB[G.diff]||FB[0]).indexOf(i);
-    if(slot<0)continue;
-    if(!bs.sp&&left<=BOSS_AT[slot]){
-      bs.sp=true;bs.alive=true;
-      const hp=2000*(D.hp||1);
-      bs.x=G.x+Math.cos(BOSSES[i].ang)*bossRadius()*1.8;bs.y=G.y+Math.sin(BOSSES[i].ang)*bossRadius()*1.8;
-      bs.e={x:bs.x,y:bs.y,type:3,v:0,hp,mhp:hp,r:46,sp:0,dmg:0,xp:0,orb:0,flash:0,ph:0,dead:false,boss:i,ac:0,sh:0,fn:0};
-      G.enemies.push(bs.e);
+  if(!inBoss()&&!(G.boss&&G.boss.pan)){if(G.boss){G.boss=null;G.eb=[];G.enemies=G.enemies.filter(e=>e.boss==null);}return;}
+  ensureBoss();
+  const left=G.romT!=null?G.winT-(G.t-G.romT):1e9,D=dif(),sc=[1.25,1,.85][G.diff]||1;
+  for(let i=0;i<G.boss.bs.length;i++){
+    const bs=G.boss.bs[i],kind=bs.kind??i,col=BOSSES[kind].col;
+    const slot=i<3?(FB[G.diff]||FB[0]).indexOf(i):-1;
+    if(!bs.sp){
+      if(slot<0||!inBoss()||left>BOSS_AT[slot])continue;
+      placeBoss(bs,i,i,BOSSES[i].ang);
       G.msg={s:BOSSES[i].nm+' 등장! (피날레 '+BOSS_AT[slot]+'초 전)',t:3.4};sfx('evo');
     }
     if(!bs.alive)continue;
@@ -627,9 +648,9 @@ function bossUpdate(dt){
     const ps=bossPos(i);bs.e.x=bs.x;bs.e.y=bs.y;
     if(bs.t>1.6){
       const ramp=1+Math.min(1,bs.t/30)*.5;bs.c-=dt;
-      if(i===0){
+      if(kind===0){
         if(bs.c<=0){bs.c=.1*sc/ramp;bs.n++;const base=bs.t*1.1;for(let k=0;k<3;k++)ebShot(ps.x,ps.y,base+k*2.0944,130,col,6,i);}
-      }else if(i===1){
+      }else if(kind===1){
         if(bs.c<=0){bs.c=1.5*sc/ramp;bs.n++;const off=(bs.n%2)*.13;for(let k=0;k<20;k++)ebShot(ps.x,ps.y,off+k*6.2832/20,115,col,7,i);
           if(bs.n%2===0){const a=Math.atan2(G.y-ps.y,G.x-ps.x);for(let k=-2;k<=2;k++)ebShot(ps.x,ps.y,a+k*.16,190,'#ffd0d8',5,i);}}
       }else{
@@ -641,14 +662,15 @@ function bossUpdate(dt){
 }
 /* --- 중간보스: 어려움 · 낭만 시대 진입 후 4·24·44·64초에 한 마리씩 (체력 1000, 3초마다 부채꼴 4발) --- */
 const MBS=[[0],[0,1],[0,1,2,3]],FB=[[1],[1,2],[0,1,2]],MB_COL=['#ff6b8a','#c8d0ff','#ffb347','#ff4d6d'],MB_NM=['반가면','전면가면','가면 부채','가면 카드'];
-function spawnMid(j){
-  const D=dif(),ang=j*1.5708+rnd(-.4,.4),d=Math.hypot(W,H)/2+60,T=ETYPE[4],hp=T.hp*(D.hp||1);
+function spawnMid(j,fa){
+  const D=dif(),ang=fa!=null?fa:j*1.5708+rnd(-.4,.4),d=Math.hypot(W,H)/2+60,T=ETYPE[4],hp=T.hp*(D.hp||1);
   G.enemies.push({x:G.x+Math.cos(ang)*d,y:G.y+Math.sin(ang)*d,type:4,v:j,mid:j,hp,mhp:hp,r:T.r,sp:T.sp,dmg:T.dmg*D.dm,xp:0,orb:0,flash:0,ph:rnd(0,6.283),dead:false,ac:0,sh:0,fn:0,bt:0,bc:0,bn:0});
   G.msg={s:'중간보스 등장! '+MB_NM[j]+' (체력 '+Math.round(hp)+')',t:3.2};sfx('evo');
 }
 function midUpdate(dt){
-  if(G.romT==null||C[G.cid].era!==4)return;
-  if(!G.mbSp){G.mbSp=true;for(const j of MBS[G.diff]||MBS[0])spawnMid(j);}
+  const fin=G.romT!=null&&C[G.cid].era===4;
+  if(!fin&&!G.pan)return;
+  if(fin&&!G.mbSp){G.mbSp=true;for(const j of MBS[G.diff]||MBS[0])spawnMid(j);}
   for(const e of G.enemies){
     if(e.mid==null||e.dead)continue;
     e.bt+=dt;e.bc-=dt;
@@ -674,9 +696,9 @@ function ebUpdate(dt){
   G.eb=G.eb.filter(b=>!b.dead);
 }
 function drawBoss(camX,camY){
-  for(let i=0;G.boss&&i<3;i++){
+  for(let i=0;G.boss&&i<G.boss.bs.length;i++){
     const bs=G.boss.bs[i];if(!bs.alive)continue;
-    const ps=bossPos(i),x=ps.x-camX,y=ps.y-camY,col=BOSSES[i].col,im=getImg(IMG.boss&&IMG.boss[i]);
+    const kd=bs.kind??i,ps=bossPos(i),x=ps.x-camX,y=ps.y-camY,col=BOSSES[kd].col,im=getImg(IMG.boss&&IMG.boss[kd]);
     ctx.save();ctx.globalAlpha=ps.al;
     ctx.globalCompositeOperation='lighter';
     const g=ctx.createRadialGradient(x,y,0,x,y,110);g.addColorStop(0,col+'66');g.addColorStop(1,col+'00');
@@ -979,7 +1001,7 @@ function step(dt){
     }
   }
 
-  bossUpdate(dt);midUpdate(dt);ebUpdate(dt);
+  panicUpdate(dt);bossUpdate(dt);midUpdate(dt);ebUpdate(dt);
 
   weaponStep(dt);
   if(G.sched.length){const due=G.sched.filter(s=>s.at<=G.t);G.sched=G.sched.filter(s=>s.at>G.t);for(const s of due)s.f();}
